@@ -73,5 +73,5 @@ dependencies {
 }
 
 task("printVersionName") {
-    println(version)
+    println(android.defaultConfig.versionName)
 }
