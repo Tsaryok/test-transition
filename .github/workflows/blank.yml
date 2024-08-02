@@ -70,6 +70,17 @@ jobs:
         run: |
           echo "VER=${{steps.android_version.outputs.VERSION_NAME}}" >> $GITHUB_ENV
 
+      - name: Generate changelog
+        id: generate_changelog # Важно указать идентификатор, чтобы обращаться к outputs
+        run: |
+          PREV_TAG=$(git describe --tags --abbrev=0 --exclude=${{ env.VER }})
+          echo "Предыдущий тег: $PREV_TAG"
+          CHANGELOG=$(git log $PREV_TAG..HEAD --pretty=format:"* %s (%h)" --reverse)
+          echo "Список изменений:\n$CHANGELOG"
+          # Устанавливаем outputs для шага
+          echo "::set-output name=changelog::$CHANGELOG"
+
+
       - name: Create Draft Release
         id: create_release
         uses: actions/create-release@v1
@@ -78,6 +89,10 @@ jobs:
         with:
           tag_name: ${{ env.VER }}
           release_name: Release ${{ env.VER }}
+          body: |
+            Full Changelog: https://github.com/ChD1/pokerEYE/commits/${{ env.VER }}
+            Changelog:
+              ${{ steps.generate_changelog.outputs.changelog }}
           draft: false
           prerelease: false
 
