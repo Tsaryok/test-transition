@@ -73,9 +73,9 @@ jobs:
       - name: Generate changelog
         id: generate_changelog # Важно указать идентификатор, чтобы обращаться к outputs
         run: |
-          PREV_TAG=$(git describe --tags --abbrev=0 --exclude=${{ env.VER }})
-          echo "Предыдущий тег: $PREV_TAG"
-          CHANGELOG=$(git log $PREV_TAG..HEAD --pretty=format:"* %s (%h)" --reverse)
+          #PREV_TAG=$(git describe --tags --abbrev=0 --exclude=${{ env.VER }})
+          #echo "Предыдущий тег: $PREV_TAG"
+          CHANGELOG=$(git log --pretty=format:"* %s (%h)" --reverse)
           echo "Список изменений:\n$CHANGELOG"
           # Устанавливаем outputs для шага
           echo "::set-output name=changelog::$CHANGELOG"
